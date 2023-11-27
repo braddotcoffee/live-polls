@@ -1,0 +1,7 @@
+twitch-chat-irc
+PyYAML
+quart
+quart_cors
+redis
+hypercorn
+six
