@@ -8,7 +8,7 @@ from utils.config import YAMLConfig
 from threading import Thread
 from utils.config import YAMLConfig as Config
 from quart_cors import cors
-from quart import Quart, copy_current_app_context
+from quart import Quart
 from server.sse import sse
 import logging
 
@@ -30,6 +30,9 @@ app.config["REDIS_URL"] = f"redis://{CACHE_HOST}"
 app.register_blueprint(sse, url_prefix="/stream")
 
 VOTE_SERVICE = VoteService(single_vote_per_user=SINGLE_VOTE_PER_USER)
+TWITCH_SERVICE = TwitchService(
+    CHANNEL_NAME, POSITIVE_KEYWORD, NEGATIVE_KEYWORD, VOTE_SERVICE.cast_vote
+)
 SUMMARY_EVENT_TYPE = "summary"
 
 
@@ -44,14 +47,26 @@ async def vote_summary():
     LOG.debug("Getting vote summary...")
     return VOTE_SERVICE.get_summary()._asdict()
 
-@app.route("/reset_poll")
+
+@app.route("/reset")
 @token_required
 async def reset():
     VOTE_SERVICE.reset()
-    await sse.publish(
-        VOTE_SERVICE.get_summary()._asdict(),
-        type=SUMMARY_EVENT_TYPE
-    )
+    await sse.publish(VOTE_SERVICE.get_summary()._asdict(), type=SUMMARY_EVENT_TYPE)
+    return ("OK", 200)
+
+
+@app.route("/start")
+@token_required
+async def start():
+    TWITCH_SERVICE.enable()
+    return ("OK", 200)
+
+
+@app.route("/stop")
+@token_required
+async def stop():
+    TWITCH_SERVICE.disable()
     return ("OK", 200)
 
 
@@ -64,9 +79,7 @@ def async_setup():
 
 
 def start_twitch_service():
-    TwitchService(
-        CHANNEL_NAME, POSITIVE_KEYWORD, NEGATIVE_KEYWORD, VOTE_SERVICE.cast_vote
-    ).connect()
+    TWITCH_SERVICE.connect()
 
 
 async def handler(vote_summary: VoteSummary):

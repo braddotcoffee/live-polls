@@ -17,13 +17,22 @@ class TwitchService:
         self.positive_keyword = positive_keyword
         self.negative_keyword = negative_keyword
         self.vote_handler = vote_handler
+        self.enabled = True
 
     def connect(self):
         connection = twitch_chat_irc.TwitchChatIRC()
         connection.listen(self.channel_name, on_message=self.on_message)
 
+    def enable(self):
+        self.enabled = True
+    
+    def disable(self):
+        self.enabled = False
+
     def on_message(self, message):
         LOG.debug(f"Received message: {message}")
+        if not self.enabled:
+            return
         if message["message"].lower() == self.positive_keyword:
             run_with_context(self.vote_handler, 1, message["user-id"])
         elif message["message"].lower() == self.negative_keyword:
