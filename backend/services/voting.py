@@ -16,10 +16,11 @@ class VoteService:
     def subscribe(self, handler):
         self.observable.subscribe(handler)
 
+    def get_summary(self):
+        return VoteSummary(score=self.score, total_votes=self.total_votes)
+
     async def cast_vote(self, value: int):
         LOG.debug(f"Casting vote: {value}")
         self.score += value
         self.total_votes += 1
-        await self.observable.emit(
-            VoteSummary(score=self.score, total_votes=self.total_votes)
-        )
+        await self.observable.emit(self.get_summary())

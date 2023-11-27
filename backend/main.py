@@ -1,3 +1,4 @@
+from utils.app_context import run_with_context
 from services.twitch import TwitchService
 from services.voting import VoteService, VoteSummary
 from utils.config import YAMLConfig
@@ -5,7 +6,7 @@ from utils.config import YAMLConfig
 from threading import Thread
 from utils.config import YAMLConfig as Config
 from quart_cors import cors
-from quart import Quart
+from quart import Quart, copy_current_app_context
 from server.sse import sse
 import logging
 
@@ -25,6 +26,8 @@ app.config["REDIS_URL"] = f"redis://{CACHE_HOST}"
 
 app.register_blueprint(sse, url_prefix="/stream")
 
+VOTE_SERVICE = VoteService()
+
 
 @app.before_serving
 async def setup():
@@ -32,18 +35,27 @@ async def setup():
     Thread(target=async_setup()).start()
 
 
+@app.route("/vote_summary")
+async def vote_summary():
+    LOG.debug("Getting vote summary...")
+    return VOTE_SERVICE.get_summary()._asdict()
+
+
 def async_setup():
-    vote_service = VoteService()
-    vote_service.subscribe(handler)
+    VOTE_SERVICE.subscribe(handler)
     LOG.info("Connecting to Twitch...")
+    run_with_context(start_twitch_service)
+
+
+def start_twitch_service():
     TwitchService(
-        CHANNEL_NAME, POSITIVE_KEYWORD, NEGATIVE_KEYWORD, vote_service.cast_vote
+        CHANNEL_NAME, POSITIVE_KEYWORD, NEGATIVE_KEYWORD, VOTE_SERVICE.cast_vote
     ).connect()
 
 
 async def handler(vote_summary: VoteSummary):
     LOG.info(f"Publishing {vote_summary}")
     await sse.publish(
-        {"score": vote_summary.score, "total_votes": vote_summary.total_votes},
+        vote_summary._asdict(),
         type="summary",
     )
