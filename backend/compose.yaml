@@ -12,7 +12,10 @@ services:
         - "3000:3000"
       configs:
         - source: config
-          target: /config.yaml
+          target: /app/config.yaml
+      secrets:
+      - source: secrets-config
+        target: /app/secrets.yaml
 
   cache:
     image: redis:alpine
@@ -29,5 +32,8 @@ services:
 configs:
   config:
     file: ./config.yaml
+secrets:
+  secrets-config:
+    file: ./secrets.yaml
 volumes:
   cache:

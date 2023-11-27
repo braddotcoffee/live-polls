@@ -1,3 +1,5 @@
+from server.token_required import token_required
+from server.keepalive import start_keepalive
 from utils.app_context import run_with_context
 from services.twitch import TwitchService
 from services.voting import VoteService, VoteSummary
@@ -27,6 +29,7 @@ app.config["REDIS_URL"] = f"redis://{CACHE_HOST}"
 app.register_blueprint(sse, url_prefix="/stream")
 
 VOTE_SERVICE = VoteService()
+SUMMARY_EVENT_TYPE = "summary"
 
 
 @app.before_serving
@@ -40,9 +43,21 @@ async def vote_summary():
     LOG.debug("Getting vote summary...")
     return VOTE_SERVICE.get_summary()._asdict()
 
+@app.route("/reset_poll")
+@token_required
+async def reset():
+    VOTE_SERVICE.reset()
+    await sse.publish(
+        VOTE_SERVICE.get_summary()._asdict(),
+        type=SUMMARY_EVENT_TYPE
+    )
+    return ("OK", 200)
+
 
 def async_setup():
     VOTE_SERVICE.subscribe(handler)
+    LOG.info("Startging SSE keepalive...")
+    start_keepalive(app)
     LOG.info("Connecting to Twitch...")
     run_with_context(start_twitch_service)
 
@@ -54,8 +69,8 @@ def start_twitch_service():
 
 
 async def handler(vote_summary: VoteSummary):
-    LOG.info(f"Publishing {vote_summary}")
+    LOG.debug(f"Publishing {vote_summary}")
     await sse.publish(
         vote_summary._asdict(),
-        type="summary",
+        type=SUMMARY_EVENT_TYPE,
     )

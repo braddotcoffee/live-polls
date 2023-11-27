@@ -4,14 +4,22 @@ import Head from 'next/head';
 import styles from '../styles/Poll.module.css';
 import { useState, useEffect } from 'react';
 
+const HALF_PAGE_SCALE_FACTOR = 50;
+
+const getBarHeight = (score, totalVotes) => {
+  return `${(Math.abs(score) / totalVotes) * HALF_PAGE_SCALE_FACTOR}%`
+}
 
 export default function Poll() {
   let initialVoteSummary = {
     score: 0,
     total_votes: 0,
+    positive_votes: 0,
+    negative_votes: 0,
   };
 
   const [voteSummary, setVoteSummary] = useState(initialVoteSummary);
+
 
   fetch("https://api.brad.coffee/vote_summary")
     .then(response => response.json())
@@ -19,7 +27,6 @@ export default function Poll() {
     .catch(error => console.log(error))
 
   useEffect(() => {
-    console.log("Running use effect")
     const voteSummarySource = new EventSource("https://api.brad.coffee/stream");
     voteSummarySource.addEventListener("summary", (event) => setVoteSummary(JSON.parse(event.data)));
 
@@ -33,13 +40,14 @@ export default function Poll() {
       <Head>
         <script src="https://cdn.tailwindcss.com"></script>
       </Head>
-      <h1 className="text-7xl text-slate-700">Test 123</h1>
-      <div>
-        Score: {voteSummary.score}
+      <div id="bar" className={`
+        w-12 absolute left-0
+        transition-all ease-in-out duration-500
+        ${voteSummary.score > 0 ? "-translate-y-1/2 bg-green-500" : "translate-y-1/2 bg-red-500"}
+        ${voteSummary.score == 0 ? "opacity-0" : ""}
+        `} style={{ height: getBarHeight(voteSummary.score, voteSummary.total_votes) }}>
+
       </div>
-      <div>
-        Total Votes: {voteSummary.total_votes}
-      </div>
-    </div>
+    </div >
   );
 }

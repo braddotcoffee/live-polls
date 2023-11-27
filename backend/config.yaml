@@ -1,8 +1,0 @@
-Voting:
-  ChannelName: cloudzydev
-  PositiveKeyword: hire
-  NegativeKeyword: fire
-
-Server:
-  Cache:
-    Host: cache
