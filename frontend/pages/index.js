@@ -1,9 +1,11 @@
 'use client'
 
+import Script from 'next/script';
 import Head from 'next/head';
 import styles from '../styles/Poll.module.css';
 import { useState, useEffect } from 'react';
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const HALF_PAGE_SCALE_FACTOR = 50;
 
 const getBarHeight = (score, totalVotes) => {
@@ -30,13 +32,6 @@ export default function Poll() {
   const [translate, setTranslate] = useState(POSITIVE_TRANSLATE);
   const [color, setColor] = useState(POSITIVE_COLOR);
 
-  fetch("https://api.brad.coffee/vote_summary")
-    .then(response => response.json())
-    .then(newSummary => {
-      setVoteSummary(newSummary)
-    })
-    .catch(error => console.log(error))
-
   const updateBarStyles = (newVoteSummary) => {
     if (newVoteSummary.score > 0) {
       setColor(POSITIVE_COLOR)
@@ -54,7 +49,15 @@ export default function Poll() {
   }
 
   useEffect(() => {
-    const voteSummarySource = new EventSource("https://api.brad.coffee/stream");
+    fetch(`${BASE_URL}/vote_summary`)
+      .then(response => response.json())
+      .then(newSummary => {
+        setVoteSummary(newSummary)
+        updateBarStyles(newSummary)
+      })
+      .catch(error => console.log(error))
+
+    const voteSummarySource = new EventSource(`${BASE_URL}/stream`);
     voteSummarySource.addEventListener("summary", (event) => {
       const newVoteSummary = JSON.parse(event.data)
       setVoteSummary(newVoteSummary)
@@ -67,16 +70,19 @@ export default function Poll() {
   }, [])
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <script src="https://cdn.tailwindcss.com"></script>
-      </Head>
-      <div id="bar" className={`
+    <>
+      <Script src="https://cdn.tailwindcss.com" />
+      <div className={styles.container}>
+        <Head>
+          <title>Poll Overlay</title>
+        </Head>
+        <div id="bar" className={`
         w-12 absolute left-0
         ${styles["transition-bar"]} ease-in-out duration-500
         ${opacity} ${translate} ${color}
         `} style={{ height: getBarHeight(voteSummary.score, voteSummary.total_votes) }}>
-      </div>
-    </div >
+        </div>
+      </div >
+    </>
   );
 }
