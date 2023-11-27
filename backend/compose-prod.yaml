@@ -1,26 +1,24 @@
 version: "3.8"
 services:
-  server:
+  prod-server:
       build:
         context: .
         dockerfile: ./Dockerfile
-      extra_hosts:
-        - "host.docker.internal:host-gateway"
       depends_on:
-        - cache
+        - prod-cache
       ports:
-        - "3000:3000"
+        - "3005:3000"
       configs:
-        - source: config
+        - source: prod-config
           target: /app/config.yaml
       secrets:
-      - source: secrets-config
+      - source: prod-secrets
         target: /app/secrets.yaml
 
-  cache:
+  prod-cache:
     image: redis:alpine
     volumes: 
-      - cache:/data
+      - prod-cache:/data
     healthcheck:
       test: ["CMD", "redis-cli","ping"]
       timeout: 1s
@@ -28,10 +26,10 @@ services:
       retries: 10
 
 configs:
-  config:
-    file: ./config.yaml
+  prod-config:
+    file: ./config-prod.yaml
 secrets:
-  secrets-config:
-    file: ./secrets.yaml
+  prod-secrets:
+    file: ./secrets-prod.yaml
 volumes:
-  cache:
+  prod-cache:
