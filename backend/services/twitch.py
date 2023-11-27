@@ -23,8 +23,8 @@ class TwitchService:
         connection.listen(self.channel_name, on_message=self.on_message)
 
     def on_message(self, message):
-        LOG.debug(f"Received message: {message['message']}")
+        LOG.debug(f"Received message: {message}")
         if message["message"].lower() == self.positive_keyword:
-            run_with_context(self.vote_handler, 1)
+            run_with_context(self.vote_handler, 1, message["user-id"])
         elif message["message"].lower() == self.negative_keyword:
-            run_with_context(self.vote_handler, -1)
+            run_with_context(self.vote_handler, -1, message["user-id"])

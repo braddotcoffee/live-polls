@@ -18,6 +18,7 @@ LOG = logging.getLogger(__name__)
 CHANNEL_NAME = YAMLConfig.CONFIG["Voting"]["ChannelName"]
 POSITIVE_KEYWORD = YAMLConfig.CONFIG["Voting"]["PositiveKeyword"]
 NEGATIVE_KEYWORD = YAMLConfig.CONFIG["Voting"]["NegativeKeyword"]
+SINGLE_VOTE_PER_USER: bool = YAMLConfig.CONFIG["Voting"].get("SingleVotePerUser", True)
 
 
 CACHE_HOST = Config.CONFIG["Server"]["Cache"]["Host"]
@@ -28,7 +29,7 @@ app.config["REDIS_URL"] = f"redis://{CACHE_HOST}"
 
 app.register_blueprint(sse, url_prefix="/stream")
 
-VOTE_SERVICE = VoteService()
+VOTE_SERVICE = VoteService(single_vote_per_user=SINGLE_VOTE_PER_USER)
 SUMMARY_EVENT_TYPE = "summary"
 
 
