@@ -1,7 +1,7 @@
 # 📊 Twitch Live Polls
 Live poll that hooks into a Twitch channel to support live eval-bar view of infinite-duration polls 
 
-![Live Poll Preview](static/LivePollPreview.mov)
+![Live Poll Preview](static/LivePollPreview.mp4)
 
 ## 🔍 Table of Contents
 * [🚀 Quickstart](#🚀-quickstart)
