@@ -2,18 +2,18 @@
   <img src="static/TwitchPolls.png">
   <b>Infinite Duration Twitch Polls with Eval Bar Overlay</b>
 </p>
+<h4 align="center">
+<a href="#quickstart">🚀 Quickstart</a> |
+<a href="#voting-configuration">🗳️ Voting Configuration</a> |
+<a href="#endpoints">🎡 Controlling Polls</a> |
+<a href="#contributing">👩‍💻 Contributing </a>
+</h4>
 
 
 https://github.com/braddotcoffee/live-polls/assets/17772186/3ce95b26-6a4a-416d-abe0-6e34bea65029
 
 
-
-## 🔍 Table of Contents
-* [🚀 Quickstart](#🚀-quickstart)
-* [🗳️ Voting Configuration](#🗳️-voting-configuration)
-* [🎡 Controlling Polls via Server Endpoints](#🎡-controlling-polls-via-server-endpoints)
-* [👩‍💻 Contributing / Development Guide](#👩‍💻-contributing--development-guide)
-
+<a id="quickstart"></a>
 ## 🚀 Quickstart
 
 Follow the steps below to run this project for your own Twitch Channel!
@@ -57,6 +57,7 @@ npm run build
 npm start
 ```
 
+<a id="voting-configuration"></a>
 ## 🗳️ Voting Configuration
 Voting takes place by sending a message in Twitch Chat that corresponds to a configured `PositiveKeyword` or `NegativeKeyword`. These can be configured in your `config.yaml`:
 ```yaml
@@ -89,6 +90,7 @@ Voting:
   SingleVotePerUser: False
 ```
 
+<a id="endpoints"></a>
 ## 🎡 Controlling Polls via Server Endpoints
 
 ### Reset Poll
@@ -115,5 +117,6 @@ curl --request GET \
   --header 'x-access-token: YOUR_ACCESS_TOKEN'
 ```
 
+<a id="contributing"></a>
 ## 👩‍💻 Contributing / Development Guide
 Interested in contributing? Check out the [development guide](docs/CONTRIBUTING.md)!
