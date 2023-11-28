@@ -1,5 +1,8 @@
-# 📊 Twitch Live Polls
-Live poll that hooks into a Twitch channel to support live eval-bar view of infinite-duration polls 
+<p align="center">
+  <img src="static/TwitchPolls.png">
+  <b>Infinite Duration Twitch Polls with Eval Bar Overlay</b>
+</p>
+
 
 https://github.com/braddotcoffee/live-polls/assets/17772186/3ce95b26-6a4a-416d-abe0-6e34bea65029
 
@@ -7,6 +10,7 @@ https://github.com/braddotcoffee/live-polls/assets/17772186/3ce95b26-6a4a-416d-a
 
 ## 🔍 Table of Contents
 * [🚀 Quickstart](#🚀-quickstart)
+* [🗳️ Voting Configuration](#🗳️-voting-configuration)
 * [🎡 Controlling Polls via Server Endpoints](#🎡-controlling-polls-via-server-endpoints)
 * [👩‍💻 Contributing / Development Guide](#👩‍💻-contributing--development-guide)
 
@@ -51,6 +55,38 @@ Build the frontend for production and start it up. The app will be served on `lo
 ```bash
 npm run build
 npm start
+```
+
+## 🗳️ Voting Configuration
+Voting takes place by sending a message in Twitch Chat that corresponds to a configured `PositiveKeyword` or `NegativeKeyword`. These can be configured in your `config.yaml`:
+```yaml
+Voting:
+  PositiveKeyword:
+  NegativeKeyword:
+```
+Messages that match these keywords exactly (case-insensitive) will be counted as votes.
+
+```
+"voteKeyword" <- Counted as Vote
+"Message that contains voteKeyword" <- Not counted as Vote
+```
+
+### SingleVotePerUser Mode
+By default, the application only allows one vote per user, **but allows them to change it at any time**. If you wish to disallow changing of votes, consider using the built-in Twitch polls functionality (these have a maximum duration of 10 minutes).
+
+SingleVotePerUser Mode can be enabled in the `config.yaml`
+```yaml
+Voting:
+  SingleVotePerUser: True
+```
+
+### MultipleVotePerUser Mode
+MultipleVotePerUser mode allows users to vote as many times as they want throughout the duration of the poll. This encourages users to spam chat for constant engagement if you want your chat to fly by!
+
+MultipleVotePerUser Mode can be enabled in the `config.yaml`
+```yaml
+Voting:
+  SingleVotePerUser: False
 ```
 
 ## 🎡 Controlling Polls via Server Endpoints
