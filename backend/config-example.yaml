@@ -1,0 +1,9 @@
+Voting:
+  ChannelName: 
+  PositiveKeyword: hire
+  NegativeKeyword: fire
+  SingleVotePerUser: True
+
+Server:
+  Cache:
+    Host: prod-cache
