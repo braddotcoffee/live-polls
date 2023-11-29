@@ -33,7 +33,7 @@ class TwitchService:
         LOG.debug(f"Received message: {message}")
         if not self.enabled:
             return
-        if message["message"].lower() == self.positive_keyword:
+        if message["message"].lower().startswith(self.positive_keyword):
             run_with_context(self.vote_handler, 1, message["user-id"])
-        elif message["message"].lower() == self.negative_keyword:
+        elif message["message"].lower().startswith(self.negative_keyword):
             run_with_context(self.vote_handler, -1, message["user-id"])
