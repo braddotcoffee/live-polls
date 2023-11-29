@@ -72,7 +72,10 @@ export default function Poll() {
   return (
     <>
       <Script src="https://cdn.tailwindcss.com" />
-      <div className={styles.container}>
+      <div className="
+          min-h-[100vh] p-[0 0.5rem]
+          w-12 flex flex-col
+          justify-center items-center">
         <Head>
           <title>Poll Overlay</title>
         </Head>
