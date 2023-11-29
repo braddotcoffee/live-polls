@@ -1,11 +1,11 @@
 import pytest
 from unittest.mock import AsyncMock
-from services.voting import VoteService
+from services.voting.vote_casting import VoteCastingService
 
 
 @pytest.mark.asyncio
 async def test_single_vote_per_user():
-    vote_service = VoteService(single_vote_per_user=True)
+    vote_service = VoteCastingService(single_vote_per_user=True)
     await vote_service.cast_vote(1, "user_id")
     vote_summary = vote_service.get_summary()
     assert vote_summary.total_votes == 1
@@ -21,7 +21,7 @@ async def test_single_vote_per_user():
 
 @pytest.mark.asyncio
 async def test_multiple_vote_per_user():
-    vote_service = VoteService(single_vote_per_user=False)
+    vote_service = VoteCastingService(single_vote_per_user=False)
     await vote_service.cast_vote(1, "user_id")
     vote_summary = vote_service.get_summary()
     assert vote_summary.total_votes == 1
@@ -37,7 +37,7 @@ async def test_multiple_vote_per_user():
 
 @pytest.mark.asyncio
 async def test_tallies_score():
-    vote_service = VoteService(single_vote_per_user=False)
+    vote_service = VoteCastingService(single_vote_per_user=False)
     await vote_service.cast_vote(1, "user_id")
     await vote_service.cast_vote(1, "user_id")
     await vote_service.cast_vote(-1, "user_id")
@@ -47,7 +47,7 @@ async def test_tallies_score():
 
 @pytest.mark.asyncio
 async def test_calls_handlers():
-    vote_service = VoteService(single_vote_per_user=False)
+    vote_service = VoteCastingService(single_vote_per_user=False)
     mock_handler = AsyncMock()
     vote_service.subscribe(mock_handler)
     await vote_service.cast_vote(1, "user_id")
@@ -58,7 +58,7 @@ async def test_calls_handlers():
 
 @pytest.mark.asyncio
 async def test_reset():
-    vote_service = VoteService(single_vote_per_user=False)
+    vote_service = VoteCastingService(single_vote_per_user=False)
     await vote_service.cast_vote(1, "user_id")
     vote_summary = vote_service.get_summary()
     assert vote_summary.total_votes == 1

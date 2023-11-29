@@ -9,7 +9,7 @@ VoteSummary = namedtuple(
 )
 
 
-class VoteService:
+class VoteCastingService:
     def __init__(self, single_vote_per_user=True):
         self.observable = Observable()
         self.single_vote_per_user = single_vote_per_user
@@ -73,6 +73,7 @@ class VoteService:
         await self.observable.emit(self.get_summary())
 
     async def cast_vote(self, value: int, user_id: str):
+        LOG.debug(f"Casting vote: {user_id=}, {value=}")
         if self.single_vote_per_user:
             return await self._cache_voting(value, user_id)
         return await self._no_cache_voting(value, user_id)

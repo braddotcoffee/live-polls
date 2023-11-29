@@ -3,6 +3,7 @@ Voting:
   PositiveKeyword: hire
   NegativeKeyword: fire
   SingleVotePerUser: True
+  VoteDetectionMode: StartsWith
 
 Server:
   Cache:
