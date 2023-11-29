@@ -77,7 +77,7 @@ async def stop():
 
 def async_setup():
     VOTE_CASTER.subscribe(handler)
-    LOG.info("Startging SSE keepalive...")
+    LOG.info("Starting SSE keepalive...")
     start_keepalive(app)
     LOG.info("Connecting to Twitch...")
     run_with_context(start_twitch_service)
