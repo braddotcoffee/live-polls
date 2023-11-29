@@ -2,6 +2,15 @@
 
 Right now Twitch Live Polls is not actively seeking new contributors. That being said, the right PR will always get merged 😎.
 
+## Install Pre-Commit Hooks
+
+Before starting development, be sure to install `pre-commit` and our corresponding hooks! This will ensure the PR process goes smoothly.
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
 ## Development Setup
 
 The development setup guide is quite similar to the Quickstart that is [found in the README](../README.md)
