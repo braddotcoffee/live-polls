@@ -1,5 +1,5 @@
 Voting:
-  ChannelName: 
+  ChannelName:
   PositiveKeyword: hire
   NegativeKeyword: fire
   SingleVotePerUser: True

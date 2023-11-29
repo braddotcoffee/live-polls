@@ -1,28 +1,28 @@
 version: "3.8"
 services:
   server:
-      build:
-        context: .
-        dockerfile: ./Dockerfile
-      extra_hosts:
-        - "host.docker.internal:host-gateway"
-      depends_on:
-        - cache
-      ports:
-        - "3000:3000"
-      configs:
-        - source: config
-          target: /app/config.yaml
-      secrets:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - cache
+    ports:
+      - "3000:3000"
+    configs:
+      - source: config
+        target: /app/config.yaml
+    secrets:
       - source: secrets-config
         target: /app/secrets.yaml
 
   cache:
     image: redis:alpine
-    volumes: 
+    volumes:
       - cache:/data
     healthcheck:
-      test: ["CMD", "redis-cli","ping"]
+      test: ["CMD", "redis-cli", "ping"]
       timeout: 1s
       interval: 1s
       retries: 10

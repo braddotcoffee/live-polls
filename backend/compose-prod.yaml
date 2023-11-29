@@ -1,26 +1,26 @@
 version: "3.8"
 services:
   prod-server:
-      build:
-        context: .
-        dockerfile: ./Dockerfile
-      depends_on:
-        - prod-cache
-      ports:
-        - "3005:3000"
-      configs:
-        - source: prod-config
-          target: /app/config.yaml
-      secrets:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - prod-cache
+    ports:
+      - "3005:3000"
+    configs:
+      - source: prod-config
+        target: /app/config.yaml
+    secrets:
       - source: prod-secrets
         target: /app/secrets.yaml
 
   prod-cache:
     image: redis:alpine
-    volumes: 
+    volumes:
       - prod-cache:/data
     healthcheck:
-      test: ["CMD", "redis-cli","ping"]
+      test: ["CMD", "redis-cli", "ping"]
       timeout: 1s
       interval: 1s
       retries: 10
