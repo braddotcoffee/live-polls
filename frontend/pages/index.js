@@ -87,7 +87,7 @@ export default function Poll() {
         </div>
 
         <div className={`
-        absolute left-4 font-semibold mb-[80px]
+        absolute left-[12px] font-semibold mb-[80px]
         ease-in-out duration-500 
          ${translate}
         `} style={{ height: getBarHeight(voteSummary.score, voteSummary.total_votes) }}>
@@ -95,7 +95,7 @@ export default function Poll() {
         </div>
         
         <div className={`
-        absolute left-4 flex flex-col justify-end mt-[80px] 
+        absolute left-[12px] flex flex-col justify-end mt-[80px] 
         ease-in-out duration-500 
          ${translate}
         `} style={{ height: getBarHeight(voteSummary.score, voteSummary.total_votes) }}>
