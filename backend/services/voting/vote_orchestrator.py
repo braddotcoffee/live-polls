@@ -8,7 +8,7 @@ class VoteOrchestratorService:
         self.detector = detector
         self.caster = caster
         self.enabled = True
-    
+
     def enable(self):
         self.enabled = True
 
@@ -22,4 +22,3 @@ class VoteOrchestratorService:
         if not is_vote:
             return
         run_with_context(self.caster.cast_vote, score, identifier)
-        
