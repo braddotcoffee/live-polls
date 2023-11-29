@@ -4,8 +4,10 @@ import Script from 'next/script';
 import Head from 'next/head';
 import styles from '../styles/Poll.module.css';
 import { useState, useEffect } from 'react';
+import SuccessThresholdIndicator from '../components/successThresholdIndicator';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const SUCCESS_THRESHOLD = process.env.NEXT_PUBLIC_SUCCESS_THRESHOLD;
 const HALF_PAGE_SCALE_FACTOR = 50;
 
 const getBarHeight = (score, totalVotes) => {
@@ -13,8 +15,19 @@ const getBarHeight = (score, totalVotes) => {
   return `${(Math.abs(score) / totalVotes) * HALF_PAGE_SCALE_FACTOR}%`
 }
 
+const showSuccessThreshold = (voteSummary) => {
+  return SUCCESS_THRESHOLD !== undefined && voteSummary.total_votes > 0;
+}
+
+const getPositiveRatio = (voteSummary) => {
+  const ratio = Math.floor((voteSummary.positive_votes / voteSummary.total_votes) * 100);
+  console.debug(`Positive ratio: ${ratio}`)
+  return ratio;
+}
+
 const POSITIVE_COLOR = "bg-green-500";
 const NEGATIVE_COLOR = "bg-red-500";
+const SUCCESS_COLOR = "bg-pink-300";
 
 const POSITIVE_TRANSLATE = "-translate-y-1/2";
 const NEGATIVE_TRANSLATE = "translate-y-1/2";
@@ -34,7 +47,11 @@ export default function Poll() {
 
   const updateBarStyles = (newVoteSummary) => {
     if (newVoteSummary.score > 0) {
-      setColor(POSITIVE_COLOR)
+      if (SUCCESS_THRESHOLD !== undefined && getPositiveRatio(newVoteSummary) >= SUCCESS_THRESHOLD) {
+        setColor(SUCCESS_COLOR)
+      } else {
+        setColor(POSITIVE_COLOR)
+      }
       setTranslate(POSITIVE_TRANSLATE)
       setOpacity("");
     }
@@ -72,13 +89,13 @@ export default function Poll() {
   return (
     <>
       <Script src="https://cdn.tailwindcss.com" />
+      <Head>
+        <title>Poll Overlay</title>
+      </Head>
       <div className="
           min-h-[100vh] p-[0 0.5rem]
           w-12 flex flex-col
           justify-center items-center">
-        <Head>
-          <title>Poll Overlay</title>
-        </Head>
         <div id="bar" className={`
         w-12 absolute left-0
         ${styles["transition-bar"]} ease-in-out duration-500
@@ -86,6 +103,12 @@ export default function Poll() {
         `} style={{ height: getBarHeight(voteSummary.score, voteSummary.total_votes) }}>
         </div>
       </div >
+      <div className={`
+        transition-opacity ease-in-out duration-500
+        ${showSuccessThreshold(voteSummary) ? 'opacity-100' : 'opacity-0'}
+        `}>
+        {showSuccessThreshold(voteSummary) && <SuccessThresholdIndicator threshold={SUCCESS_THRESHOLD} color={SUCCESS_COLOR} />}
+      </div>
     </>
   );
 }
