@@ -21,7 +21,9 @@ CHANNEL_NAME = YAMLConfig.CONFIG["Voting"]["ChannelName"]
 POSITIVE_KEYWORD = YAMLConfig.CONFIG["Voting"]["PositiveKeyword"]
 NEGATIVE_KEYWORD = YAMLConfig.CONFIG["Voting"]["NegativeKeyword"]
 SINGLE_VOTE_PER_USER: bool = YAMLConfig.CONFIG["Voting"].get("SingleVotePerUser", True)
-VOTE_DETECTION_MODE = VoteDetectionMode(YAMLConfig.CONFIG["Voting"]["VoteDetectionMode"].lower())
+VOTE_DETECTION_MODE = VoteDetectionMode(
+    YAMLConfig.CONFIG["Voting"]["VoteDetectionMode"].lower()
+)
 
 
 CACHE_HOST = Config.CONFIG["Server"]["Cache"]["Host"]
@@ -33,11 +35,11 @@ app.config["REDIS_URL"] = f"redis://{CACHE_HOST}"
 app.register_blueprint(sse, url_prefix="/stream")
 
 VOTE_CASTER = VoteCastingService(single_vote_per_user=SINGLE_VOTE_PER_USER)
-VOTE_DETECTOR = VoteDetectionService(VOTE_DETECTION_MODE, POSITIVE_KEYWORD, NEGATIVE_KEYWORD)
-VOTE_ORCHESTRATOR = VoteOrchestratorService(VOTE_DETECTOR, VOTE_CASTER)
-TWITCH_SERVICE = TwitchService(
-    CHANNEL_NAME, VOTE_ORCHESTRATOR
+VOTE_DETECTOR = VoteDetectionService(
+    VOTE_DETECTION_MODE, POSITIVE_KEYWORD, NEGATIVE_KEYWORD
 )
+VOTE_ORCHESTRATOR = VoteOrchestratorService(VOTE_DETECTOR, VOTE_CASTER)
+TWITCH_SERVICE = TwitchService(CHANNEL_NAME, VOTE_ORCHESTRATOR)
 SUMMARY_EVENT_TYPE = "summary"
 
 

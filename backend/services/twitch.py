@@ -7,11 +7,7 @@ LOG = logging.getLogger(__name__)
 
 
 class TwitchService:
-    def __init__(
-        self,
-        channel_name: str,
-        vote_orchestrator: VoteOrchestratorService
-    ):
+    def __init__(self, channel_name: str, vote_orchestrator: VoteOrchestratorService):
         self.channel_name = channel_name
         self.vote_orchestrator = vote_orchestrator
 
