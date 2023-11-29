@@ -72,6 +72,8 @@ export default function Poll() {
   return (
     <>
       <Script src="https://cdn.tailwindcss.com" />
+      //not sure why styles.container is used instead of tailwind, the following tailwind styles can replace it
+      //min-h-[100vh] p-[0 0.5rem] w-12 flex flex-col justify-center items-center
       <div className={styles.container}>
         <Head>
           <title>Poll Overlay</title>
@@ -82,6 +84,23 @@ export default function Poll() {
         ${opacity} ${translate} ${color}
         `} style={{ height: getBarHeight(voteSummary.score, voteSummary.total_votes) }}>
         </div>
+
+        <div className={`
+        absolute left-4 font-semibold text-3xl mb-[70px]
+        ease-in-out duration-500 
+         ${translate}
+        `} style={{ height: getBarHeight(voteSummary.score, voteSummary.total_votes) }}>
+          <p className='font-semibold text-3xl text-green-500 '>{voteSummary.positive_votes}</p>
+        </div>
+        
+        <div className={`
+        absolute left-4 flex flex-col justify-end mt-[70px] 
+        ease-in-out duration-500 
+         ${translate}
+        `} style={{ height: getBarHeight(voteSummary.score, voteSummary.total_votes) }}>
+          <p className='font-semibold text-3xl text-red-500 '>{voteSummary.negative_votes}</p>
+        </div>
+
       </div >
     </>
   );
