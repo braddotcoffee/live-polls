@@ -25,7 +25,7 @@ class TwitchService:
 
     def enable(self):
         self.enabled = True
-    
+
     def disable(self):
         self.enabled = False
 
