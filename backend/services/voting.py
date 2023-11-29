@@ -72,7 +72,6 @@ class VoteService:
             self.negative_votes += 1
         await self.observable.emit(self.get_summary())
 
-
     async def cast_vote(self, value: int, user_id: str):
         if self.single_vote_per_user:
             return await self._cache_voting(value, user_id)
