@@ -21,6 +21,7 @@ const NEGATIVE_TRANSLATE = "translate-y-1/2";
 
 export default function Poll() {
   const initialVoteSummary = {
+    //not sure why score and total_votes are stored, since they can be derived from positive_votes and negative_votes.
     score: 0,
     total_votes: 0,
     positive_votes: 0,
@@ -86,19 +87,19 @@ export default function Poll() {
         </div>
 
         <div className={`
-        absolute left-4 font-semibold text-3xl mb-[70px]
+        absolute left-4 font-semibold mb-[80px]
         ease-in-out duration-500 
          ${translate}
         `} style={{ height: getBarHeight(voteSummary.score, voteSummary.total_votes) }}>
-          <p className='font-semibold text-3xl text-green-500 '>{voteSummary.positive_votes}</p>
+          <p className='font-semibold text-4xl text-green-500 '>{voteSummary.positive_votes}</p>
         </div>
         
         <div className={`
-        absolute left-4 flex flex-col justify-end mt-[70px] 
+        absolute left-4 flex flex-col justify-end mt-[80px] 
         ease-in-out duration-500 
          ${translate}
         `} style={{ height: getBarHeight(voteSummary.score, voteSummary.total_votes) }}>
-          <p className='font-semibold text-3xl text-red-500 '>{voteSummary.negative_votes}</p>
+          <p className='font-semibold text-4xl text-red-500 '>{voteSummary.negative_votes}</p>
         </div>
 
       </div >
