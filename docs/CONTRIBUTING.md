@@ -12,6 +12,7 @@ cp config-example.yaml config.yaml
 ```
 
 **Edit the example config to point to your Twitch channel.** This can be found under `Voting > ChannelName`.
+**Edit the example config to point to the correct cache instance.** Change `Server > Cache > Host` from `prod-cache` to `cache` for compatibility with the development Docker Compose.
 
 Copy the example secrets file into `secrets.yaml` for use with the development Docker Compose configuration
 ```bash

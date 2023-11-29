@@ -6,3 +6,5 @@ redis
 hypercorn
 six
 APScheduler
+pytest
+pytest-asyncio
