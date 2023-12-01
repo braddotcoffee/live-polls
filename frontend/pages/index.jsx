@@ -99,7 +99,8 @@ export default function Poll() {
         <div
           id="bar"
           className={`
-            w-12 absolute left-0
+            w-12 fixed left-0
+            z-10
             ${styles["transition-bar"]} ease-in-out duration-500
             ${opacity} ${translate} ${color}
           `}
@@ -114,6 +115,7 @@ export default function Poll() {
         ${showSuccessThreshold(voteSummary) ? "opacity-100" : "opacity-0"}
         `}
       >
+        <div className="min-h-[100vh] w-12 bg-black opacity-90 fixed left-0 top-0"></div>
         {showSuccessThreshold(voteSummary) && (
           <SuccessThresholdIndicator
             threshold={SUCCESS_THRESHOLD}
